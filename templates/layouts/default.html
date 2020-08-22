@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+  {{ template "head.html" }}
+
+    <body>
+
+    {{ template "header.html" }}
+
+    <div class="page-content">
+      <div class="wrap">
+        {{ template "content" .}}
+      </div>
+    </div>
+
+    {{ template "footer.html" }}
+
+    </body>
+</html>

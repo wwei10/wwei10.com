@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+  {{ template "head.html" }}
+
+    <body>
+
+    {{ template "header.html" }}
+
+    <div class="page-content">
+        <div class="wrap yue">
+            <div class="post">
+                <header class="post-header">
+                    <h1>{{ .Title }}</h1>
+                </header>
+                <article class="post-content">
+                    {{ template "content" .}}
+                </article>
+            </div>
+        </div>
+    </div>
+
+    {{ template "footer.html" }}
+
+    </body>
+</html>
