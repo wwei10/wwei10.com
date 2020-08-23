@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Fisher-Yates Shuffle算法"
+title: "Fisher-Yates Shuffle"
 date: 2014-02-22 22:22:00
 categories: Programming English
 permalink: /posts/fisher-yates-shuffle

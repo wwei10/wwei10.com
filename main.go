@@ -13,11 +13,26 @@ import (
 )
 
 // Renders timeline of the blog.
-func timeline(c *gin.Context) {
-	posts := parser.GetPagesFromDir("./posts")
+func timelineHelper(c *gin.Context, category string) {
+	var posts = parser.GetPagesFromDir("./posts")
+	if category != "Default" {
+		posts = parser.GetPagesWithCategory(posts, category)
+	}
 	c.HTML(http.StatusOK, "index", gin.H{
 		"Posts": posts,
 	})
+}
+
+func timeline(c *gin.Context) {
+	timelineHelper(c, "Default")
+}
+
+func chineseTimeline(c *gin.Context) {
+	timelineHelper(c, "Chinese")
+}
+
+func englishTimeline(c *gin.Context) {
+	timelineHelper(c, "English")
 }
 
 func setupRouter() *gin.Engine {
@@ -31,6 +46,8 @@ func setupRouter() *gin.Engine {
 
 	// Generate feed.
 	r.GET("/", timeline)
+	r.GET("/chinese", chineseTimeline)
+	r.GET("/english", englishTimeline)
 
 	// Generate Posts
 	r.GET("/posts/:postname", func(c *gin.Context) {

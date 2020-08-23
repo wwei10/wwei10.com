@@ -13,10 +13,11 @@ import (
 
 // Page represents a page in a website
 type Page struct {
-	Title     string
-	Date      string
-	Content   string
-	Permalink string
+	Title      string
+	Date       string
+	Content    string
+	Permalink  string
+	Categories string
 }
 
 func parseHeader(s string) map[string]string {
@@ -29,6 +30,17 @@ func parseHeader(s string) map[string]string {
 		}
 	}
 	return m
+}
+
+// GetPagesWithCategory returns an array of Page of specified category
+func GetPagesWithCategory(pages []Page, category string) []Page {
+	var results []Page
+	for _, post := range pages {
+		if strings.Contains(post.Categories, category) {
+			results = append(results, post)
+		}
+	}
+	return results
 }
 
 // GetPagesFromDir returns an array of Pages created from a directory
@@ -90,6 +102,10 @@ func GetPageFromString(s string) Page {
 	if p, found := m["permalink"]; found {
 		permalink = p
 	}
+	var categories = ""
+	if c, found := m["categories"]; found {
+		categories = c
+	}
 	body := strings.Trim(slices[2], " \n\r")
-	return Page{Title: title, Date: date, Content: body, Permalink: permalink}
+	return Page{Title: title, Date: date, Content: body, Permalink: permalink, Categories: categories}
 }
