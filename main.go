@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 	"strings"
@@ -58,7 +59,8 @@ func setupRouter() *gin.Engine {
 				c.HTML(http.StatusOK, "page", gin.H{
 					"Title":     post.Title,
 					"Content":   template.HTML(blackfriday.Run([]byte(post.Content))),
-					"Permalink": post.Permalink,
+					"Permalink": template.URL(post.Permalink),
+					"Discourse": template.JS(fmt.Sprintf("'%s%s'", "http://wwei10.com", post.Permalink)),
 				})
 			}
 		}
@@ -68,8 +70,10 @@ func setupRouter() *gin.Engine {
 	pages := parser.GetPagesMapFromDir("./templates/pages")
 	r.GET("/about", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "page", gin.H{
-			"Title":   pages["/about/"].Title,
-			"Content": template.HTML(blackfriday.Run([]byte(pages["/about/"].Content))),
+			"Title":     pages["/about/"].Title,
+			"Content":   template.HTML(blackfriday.Run([]byte(pages["/about/"].Content))),
+			"Permalink": template.URL(pages["/about/"].Permalink),
+			"Discourse": "",
 		})
 	})
 
