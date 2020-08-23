@@ -60,7 +60,7 @@ func setupRouter() *gin.Engine {
 					"Title":     post.Title,
 					"Content":   template.HTML(blackfriday.Run([]byte(post.Content))),
 					"Permalink": template.URL(post.Permalink),
-					"Discourse": template.JS(fmt.Sprintf("'%s%s'", "http://wwei10.com", post.Permalink)),
+					"Discourse": template.JS(fmt.Sprintf("'%s%s'", "https://wwei10.com", post.Permalink)),
 				})
 			}
 		}
