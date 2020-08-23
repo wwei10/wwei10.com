@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -19,6 +20,7 @@ type Page struct {
 	Content    string
 	Permalink  string
 	Categories string
+	Discourse  int64
 }
 
 func parseHeader(s string) map[string]string {
@@ -108,6 +110,20 @@ func GetPageFromString(s string) Page {
 	if c, found := m["categories"]; found {
 		categories = c
 	}
+	var discourse = int64(0)
+	if d, found := m["discourse"]; found {
+		i, err := strconv.ParseInt(d, 10, 64)
+		if err == nil {
+			discourse = i
+		}
+	}
 	body := strings.Trim(strings.Join(slices[2:], "---"), " \n\r")
-	return Page{Title: title, Date: date, Content: body, Permalink: permalink, Categories: categories}
+	return Page{
+		Title:      title,
+		Date:       date,
+		Content:    body,
+		Permalink:  permalink,
+		Categories: categories,
+		Discourse:  discourse,
+	}
 }

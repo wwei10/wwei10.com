@@ -17,12 +17,12 @@
                     {{ .Content }}
                 </article>
             </div>
-            {{ if ne .Discourse "" }}
+            {{ if .Discourse }}
             <div id='discourse-comments'></div>
             {{ end }}
             <script type="text/javascript">
             DiscourseEmbed = { discourseUrl: 'https://discourse.wwei10.com/',
-                               discourseEmbedUrl: {{ .Discourse }} };
+                               topicId: {{ .Discourse }} };
             (function() {
                 var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true;
                 d.src = DiscourseEmbed.discourseUrl + 'javascripts/embed.js';

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 	"strings"
@@ -60,7 +59,7 @@ func setupRouter() *gin.Engine {
 					"Title":     post.Title,
 					"Content":   template.HTML(blackfriday.Run([]byte(post.Content))),
 					"Permalink": template.URL(post.Permalink),
-					"Discourse": template.JS(fmt.Sprintf("'%s%s'", "https://wwei10.com", post.Permalink)),
+					"Discourse": post.Discourse,
 				})
 			}
 		}
@@ -73,7 +72,7 @@ func setupRouter() *gin.Engine {
 			"Title":     pages["/about/"].Title,
 			"Content":   template.HTML(blackfriday.Run([]byte(pages["/about/"].Content))),
 			"Permalink": template.URL(pages["/about/"].Permalink),
-			"Discourse": "",
+			"Discourse": 0,
 		})
 	})
 
