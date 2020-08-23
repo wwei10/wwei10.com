@@ -4,6 +4,7 @@ title: "Fisher-Yates Shuffle"
 date: 2014-02-22 22:22:00
 categories: Programming English
 permalink: /posts/fisher-yates-shuffle
+discourse: 17
 ---
 
 Last week, I was asked about random permutation in an interview:
