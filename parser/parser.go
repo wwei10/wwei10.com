@@ -87,7 +87,7 @@ func GetPagesMapFromDir(dirname string) map[string]Page {
 // GetPageFromString returns Page struct from a string
 func GetPageFromString(s string) Page {
 	slices := strings.Split(s, "---")
-	if len(slices) != 3 {
+	if len(slices) < 3 {
 		return Page{Title: "", Date: "", Content: ""}
 	}
 	header := slices[1]
@@ -108,6 +108,6 @@ func GetPageFromString(s string) Page {
 	if c, found := m["categories"]; found {
 		categories = c
 	}
-	body := strings.Trim(slices[2], " \n\r")
+	body := strings.Trim(strings.Join(slices[2:], "---"), " \n\r")
 	return Page{Title: title, Date: date, Content: body, Permalink: permalink, Categories: categories}
 }

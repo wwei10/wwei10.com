@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "如何快速处理CSV文件"
-date:   2020-08-15 17:16:00
+title: "如何快速处理CSV文件"
+date: 2020-08-15 17:16:00
 categories: Programming Chinese
 permalink: /posts/how-to-processing-csv-efficiently
 ---
@@ -31,6 +31,7 @@ input.split(regex, -1);
 这个算法的缺陷是运行起来非常慢，处理一个大的csv大约需要3分钟。慢的原因是匹配每个逗号的时候都要从逗号位置向后数引号的数量，如果没有任何优化，算法复杂度`O(n^2)`。
 
 ## 思路2
+
 第二个思路就是实现以上算法，但不用正则表达式。从后往前扫一遍，数引号的数量然后遇到逗号的时候，把现在的逗号到上一个符合条件的逗号之间的字符都加到结果里。
 
 ```java

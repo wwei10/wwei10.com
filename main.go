@@ -56,8 +56,9 @@ func setupRouter() *gin.Engine {
 		for _, post := range posts {
 			if strings.Contains(post.Permalink, postname) {
 				c.HTML(http.StatusOK, "page", gin.H{
-					"Title":   post.Title,
-					"Content": template.HTML(blackfriday.Run([]byte(post.Content))),
+					"Title":     post.Title,
+					"Content":   template.HTML(blackfriday.Run([]byte(post.Content))),
+					"Permalink": post.Permalink,
 				})
 			}
 		}
