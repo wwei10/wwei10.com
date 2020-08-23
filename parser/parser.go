@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
+	"sort"
 	"strings"
 )
 
@@ -59,6 +60,7 @@ func GetPagesFromDir(dirname string) []Page {
 		page := GetPageFromString(string(data))
 		pages = append(pages, page)
 	}
+	sort.Slice(pages, func(i, j int) bool { return pages[i].Date > pages[j].Date })
 	return pages
 }
 
