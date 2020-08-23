@@ -1,10 +1,15 @@
 package main
 
 import (
+	"fmt"
+	"html/template"
 	"net/http"
 
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
+	"github.com/russross/blackfriday/v2"
+
+	"github.com/wwei10/wwei10.com/parser"
 )
 
 func setupRouter() *gin.Engine {
@@ -17,12 +22,19 @@ func setupRouter() *gin.Engine {
 	r.HTMLRender = createMyRenderer()
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index", gin.H{})
+		c.HTML(http.StatusOK, "default", gin.H{
+			"Content": "",
+		})
 	})
 
+	// Generate pages from directory pages.
+	pages := parser.GetPagesMapFromDir("./templates/pages")
+	fmt.Println(pages)
+
 	r.GET("/about", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "about", gin.H{
-			"Title": "关于",
+		c.HTML(http.StatusOK, "page", gin.H{
+			"Title":   "关于",
+			"Content": template.HTML(blackfriday.Run([]byte(pages["/about/"].Content))),
 		})
 	})
 
@@ -38,7 +50,7 @@ func main() {
 func createMyRenderer() multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
 	r.AddFromFiles(
-		"index",
+		"default",
 		"templates/layouts/default.html",
 		"templates/includes/head.html",
 		"templates/includes/header.html",
@@ -46,12 +58,11 @@ func createMyRenderer() multitemplate.Renderer {
 		"templates/pages/index.html",
 	)
 	r.AddFromFiles(
-		"about",
+		"page",
 		"templates/layouts/page.html",
 		"templates/includes/head.html",
 		"templates/includes/header.html",
 		"templates/includes/footer.html",
-		"templates/pages/about.html",
 	)
 	return r
 }
