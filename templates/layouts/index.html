@@ -15,7 +15,7 @@
                   {{range . }}
                   <li>
                       <span class="post-date yue">{{ .Date }}</span>
-                      <a class="yue" href="/">{{ .Title }}</a>
+                      <a class="yue" href="{{ .Permalink }}">{{ .Title }}</a>
                   </li>
                   {{ end }}
               {{ end }}

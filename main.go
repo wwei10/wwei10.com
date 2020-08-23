@@ -3,6 +3,7 @@ package main
 import (
 	"html/template"
 	"net/http"
+	"strings"
 
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
@@ -31,9 +32,22 @@ func setupRouter() *gin.Engine {
 	// Generate feed.
 	r.GET("/", timeline)
 
+	// Generate Posts
+	r.GET("/posts/:postname", func(c *gin.Context) {
+		postname := c.Param("postname")
+		posts := parser.GetPagesFromDir("./posts")
+		for _, post := range posts {
+			if strings.Contains(post.Permalink, postname) {
+				c.HTML(http.StatusOK, "page", gin.H{
+					"Title":   post.Title,
+					"Content": template.HTML(blackfriday.Run([]byte(post.Content))),
+				})
+			}
+		}
+	})
+
 	// Generate pages from directory pages.
 	pages := parser.GetPagesMapFromDir("./templates/pages")
-
 	r.GET("/about", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "page", gin.H{
 			"Title":   pages["/about/"].Title,

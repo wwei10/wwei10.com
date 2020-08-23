@@ -1,8 +1,9 @@
 ---
 layout: post
-title:  "面试与Fisher-Yates Shuffle算法"
-date:   2014-02-22 22:22:00
-categories: Programming
+title: "Fisher-Yates Shuffle算法"
+date: 2014-02-22 22:22:00
+categories: Programming English
+permalink: /posts/fisher-yates-shuffle
 ---
 
 Last week, I was asked about random permutation in an interview:
