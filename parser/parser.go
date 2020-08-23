@@ -31,7 +31,26 @@ func parseHeader(s string) map[string]string {
 	return m
 }
 
-// GetPagesFromDir generate Pages from a directory name
+// GetPagesFromDir returns an array of Pages created from a directory
+func GetPagesFromDir(dirname string) []Page {
+	mds, err := filepath.Glob(dirname + "/*")
+	if err != nil {
+		panic(err)
+	}
+	var pages []Page
+	for _, md := range mds {
+		data, err := ioutil.ReadFile(md)
+		if err != nil {
+			fmt.Printf("Error processing %s\n", md)
+			continue
+		}
+		page := GetPageFromString(string(data))
+		pages = append(pages, page)
+	}
+	return pages
+}
+
+// GetPagesMapFromDir generate Pages from a directory name
 // Keyed by permalink
 func GetPagesMapFromDir(dirname string) map[string]Page {
 	mds, err := filepath.Glob(dirname + "/*")
@@ -58,7 +77,6 @@ func GetPageFromString(s string) Page {
 		return Page{Title: "", Date: "", Content: ""}
 	}
 	header := slices[1]
-	fmt.Println("header", header)
 	m := parseHeader(header)
 	var title = ""
 	if t, found := m["title"]; found {

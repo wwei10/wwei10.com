@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+  {{ template "head.html" }}
+
+    <body>
+
+    {{ template "header.html" }}
+
+    <div class="page-content">
+      <div class="wrap">
+        <div class="home">
+          <ul class="posts">
+              {{ with .Posts }}
+                  {{range . }}
+                  <li>
+                      <span class="post-date yue">{{ .Date }}</span>
+                      <a class="yue" href="/">{{ .Title }}</a>
+                  </li>
+                  {{ end }}
+              {{ end }}
+          </ul>
+      
+          <p class="yue">通过
+              <a href="/feed.xml">RSS</a>,
+              <a href="https://feedburner.google.com/fb/a/mailverify?uri=wwei10/blog&amp;loc=en_US">邮箱</a>
+              订阅
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {{ template "footer.html" }}
+
+    </body>
+</html>

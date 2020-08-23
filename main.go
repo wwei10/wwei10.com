@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 
@@ -12,6 +11,14 @@ import (
 	"github.com/wwei10/wwei10.com/parser"
 )
 
+// Renders timeline of the blog.
+func timeline(c *gin.Context) {
+	posts := parser.GetPagesFromDir("./posts")
+	c.HTML(http.StatusOK, "index", gin.H{
+		"Posts": posts,
+	})
+}
+
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 
@@ -21,15 +28,11 @@ func setupRouter() *gin.Engine {
 
 	r.HTMLRender = createMyRenderer()
 
-	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "default", gin.H{
-			"Content": "",
-		})
-	})
+	// Generate feed.
+	r.GET("/", timeline)
 
 	// Generate pages from directory pages.
 	pages := parser.GetPagesMapFromDir("./templates/pages")
-	fmt.Println(pages)
 
 	r.GET("/about", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "page", gin.H{
@@ -50,12 +53,11 @@ func main() {
 func createMyRenderer() multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
 	r.AddFromFiles(
-		"default",
-		"templates/layouts/default.html",
+		"index",
+		"templates/layouts/index.html",
 		"templates/includes/head.html",
 		"templates/includes/header.html",
 		"templates/includes/footer.html",
-		"templates/pages/index.html",
 	)
 	r.AddFromFiles(
 		"page",
