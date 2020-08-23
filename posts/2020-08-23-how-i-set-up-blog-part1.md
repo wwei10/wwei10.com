@@ -4,7 +4,7 @@ title: "搭建博客 - 从Jekyll到Gin"
 date: 2022-08-23 14:00:00
 categories: Programming Chinese
 permalink: /posts/how-i-setup-blog-part1
-TODOdiscourse: 20
+discourse: 20
 ---
 
 这两天自己还是想更端到端的了解网站，学习下更多前端后端，网络，运维知识，于是就开始琢磨自己怎么搭建个网站。
