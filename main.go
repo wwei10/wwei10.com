@@ -36,7 +36,7 @@ func setupRouter() *gin.Engine {
 
 	r.GET("/about", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "page", gin.H{
-			"Title":   "关于",
+			"Title":   pages["/about/"].Title,
 			"Content": template.HTML(blackfriday.Run([]byte(pages["/about/"].Content))),
 		})
 	})
