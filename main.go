@@ -38,9 +38,9 @@ func englishTimeline(c *gin.Context) {
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 
+	r.StaticFile("/favicon.ico", "./assets/favicon.ico")
 	r.Static("/assets", "./assets")
 	r.Static("/css", "./css")
-	r.Static("/favicon.ico", "./assets/favicon.ico")
 
 	r.HTMLRender = createMyRenderer()
 
