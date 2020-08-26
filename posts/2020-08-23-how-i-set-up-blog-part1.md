@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "搭建博客 - 从Jekyll到Gin"
-date: 2022-08-23 14:00:00
+date: 2020-08-23 14:00:00
 categories: Programming Chinese
 permalink: /posts/how-i-setup-blog-part1
 discourse: 20
