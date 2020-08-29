@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/Depado/bfchroma"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 	"github.com/russross/blackfriday/v2"
@@ -56,8 +57,17 @@ func setupRouter() *gin.Engine {
 		for _, post := range posts {
 			if strings.Contains(post.Permalink, postname) {
 				c.HTML(http.StatusOK, "page", gin.H{
-					"Title":     post.Title,
-					"Content":   template.HTML(blackfriday.Run([]byte(post.Content))),
+					"Title": post.Title,
+					"Content": template.HTML(
+						blackfriday.Run(
+							[]byte(post.Content),
+							blackfriday.WithRenderer(
+								// See options here:
+								// https://github.com/alecthomas/chroma/tree/master/styles
+								bfchroma.NewRenderer(bfchroma.Style("dracula")),
+							),
+						),
+					),
 					"Permalink": template.URL(post.Permalink),
 					"Discourse": post.Discourse,
 				})
