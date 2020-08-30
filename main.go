@@ -6,7 +6,9 @@ import (
 	"strings"
 
 	"github.com/Depado/bfchroma"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/russross/blackfriday/v2"
 
@@ -45,12 +47,11 @@ func timelineAPI(c *gin.Context) {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.Default())
 
-	r.StaticFile("/favicon.ico", "./assets/favicon.ico")
-	r.StaticFile("/", "./react/index.html")
-	r.Static("/react", "./react")
-	r.Static("/assets", "./assets")
-	r.Static("/css", "./css")
+	if !gin.IsDebugging() {
+		r.Use(static.Serve("/", static.LocalFile("./app/build", true)))
+	}
 
 	r.HTMLRender = createMyRenderer()
 
