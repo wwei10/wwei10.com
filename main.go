@@ -36,17 +36,32 @@ func englishTimeline(c *gin.Context) {
 	timelineHelper(c, "English")
 }
 
+func timelineAPI(c *gin.Context) {
+	var posts = parser.GetPagesFromDir("./posts")
+	c.JSON(http.StatusOK, gin.H{
+		"posts": posts,
+	})
+}
+
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 
 	r.StaticFile("/favicon.ico", "./assets/favicon.ico")
+	r.StaticFile("/", "./react/index.html")
+	r.Static("/react", "./react")
 	r.Static("/assets", "./assets")
 	r.Static("/css", "./css")
 
 	r.HTMLRender = createMyRenderer()
 
+	// APIs
+	v1 := r.Group("/api/v1/")
+	{
+		v1.GET("/timeline", timelineAPI)
+	}
+
 	// Generate feed.
-	r.GET("/", timeline)
+	r.GET("/timeline", timeline)
 	r.GET("/chinese", chineseTimeline)
 	r.GET("/english", englishTimeline)
 
