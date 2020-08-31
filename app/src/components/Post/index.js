@@ -5,16 +5,17 @@ class Post extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            permalink: this.props.match.params.permalink,
             post: null,
         };
     }
 
     componentDidMount() {
-        fetch('http://localhost:8080/api/v1/timeline')
+        fetch('http://localhost:8080/api/v1/search/' + this.state.permalink)
             .then(res => res.json())
             .then((data) => {
                 this.setState({
-                    post: data.posts[4],
+                    post: data.post,
                 });
             })
             .catch(console.log);

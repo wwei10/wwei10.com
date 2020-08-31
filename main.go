@@ -55,6 +55,27 @@ func timelineAPI(c *gin.Context) {
 	})
 }
 
+func searchAPI(c *gin.Context) {
+	var posts = parser.GetPagesFromDir("./posts")
+	link := c.Param("link")
+	for i := range posts {
+		if strings.Contains(posts[i].Permalink, link) {
+			posts[i].Content = string(blackfriday.Run(
+				[]byte(posts[i].Content),
+				blackfriday.WithRenderer(
+					// See options here:
+					// https://github.com/alecthomas/chroma/tree/master/styles
+					bfchroma.NewRenderer(bfchroma.Style("dracula")),
+				),
+			))
+			c.JSON(http.StatusOK, gin.H{
+				"post": posts[i],
+			})
+			return
+		}
+	}
+}
+
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(cors.Default())
@@ -67,9 +88,10 @@ func setupRouter() *gin.Engine {
 	r.HTMLRender = createMyRenderer()
 
 	// APIs
-	v1 := r.Group("/api/v1/")
+	v1 := r.Group("/api/v1")
 	{
 		v1.GET("/timeline", timelineAPI)
+		v1.GET("/search/:link", searchAPI)
 	}
 
 	// Generate feed.
