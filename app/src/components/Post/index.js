@@ -65,7 +65,7 @@ class Post extends React.Component {
             );
         }
         return (
-            <div className="wrap yue">Loading ... </div>
+            <div></div>
         )
     }
 }
