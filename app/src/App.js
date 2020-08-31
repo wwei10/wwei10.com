@@ -29,7 +29,7 @@ function App() {
       <Header />
       <Switch>
         <Route path="/posts/:permalink" component={Post} />
-        <Route exact path="/about" exact component={About} />
+        <Route exact path="/about" component={About} />
         <Route exact path="/" component={Feed} />
         <Route path="*" component={NoMatch} />
       </Switch>

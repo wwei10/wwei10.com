@@ -1,13 +1,11 @@
 package main
 
 import (
-	"html/template"
 	"net/http"
 	"strings"
 
 	"github.com/Depado/bfchroma"
 	"github.com/gin-contrib/cors"
-	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/russross/blackfriday/v2"
@@ -80,61 +78,18 @@ func setupRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	if !gin.IsDebugging() {
-		r.Use(static.Serve("/", static.LocalFile("./app/build", true)))
-	}
-	r.Static("/assets", "./assets")
-
-	r.HTMLRender = createMyRenderer()
-
-	// APIs
+	// APIs.
 	v1 := r.Group("/api/v1")
 	{
 		v1.GET("/timeline", timelineAPI)
 		v1.GET("/search/:link", searchAPI)
 	}
 
-	// Generate feed.
-	r.GET("/timeline", timeline)
-	r.GET("/chinese", chineseTimeline)
-	r.GET("/english", englishTimeline)
-
-	// Generate Posts
-	r.GET("/posts/:postname", func(c *gin.Context) {
-		postname := c.Param("postname")
-		posts := parser.GetPagesFromDir("./posts")
-		for _, post := range posts {
-			if strings.Contains(post.Permalink, postname) {
-				c.HTML(http.StatusOK, "page", gin.H{
-					"Title": post.Title,
-					"Content": template.HTML(
-						blackfriday.Run(
-							[]byte(post.Content),
-							blackfriday.WithRenderer(
-								// See options here:
-								// https://github.com/alecthomas/chroma/tree/master/styles
-								bfchroma.NewRenderer(bfchroma.Style("dracula")),
-							),
-						),
-					),
-					"Permalink": template.URL(post.Permalink),
-					"Discourse": post.Discourse,
-				})
-			}
-		}
+	// Serve react.
+	r.Use(static.Serve("/", static.LocalFile("./app/build", false)))
+	r.NoRoute(func(c *gin.Context) {
+		c.File("./app/build/index.html")
 	})
-
-	// Generate pages from directory pages.
-	pages := parser.GetPagesMapFromDir("./templates/pages")
-	r.GET("/about", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "page", gin.H{
-			"Title":     pages["/about/"].Title,
-			"Content":   template.HTML(blackfriday.Run([]byte(pages["/about/"].Content))),
-			"Permalink": template.URL(pages["/about/"].Permalink),
-			"Discourse": 0,
-		})
-	})
-
 	return r
 }
 
@@ -142,23 +97,4 @@ func main() {
 	r := setupRouter()
 	// Listen and Server in 0.0.0.0:8080
 	r.Run(":8080")
-}
-
-func createMyRenderer() multitemplate.Renderer {
-	r := multitemplate.NewRenderer()
-	r.AddFromFiles(
-		"index",
-		"templates/layouts/index.html",
-		"templates/includes/head.html",
-		"templates/includes/header.html",
-		"templates/includes/footer.html",
-	)
-	r.AddFromFiles(
-		"page",
-		"templates/layouts/page.html",
-		"templates/includes/head.html",
-		"templates/includes/header.html",
-		"templates/includes/footer.html",
-	)
-	return r
 }
