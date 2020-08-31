@@ -8,8 +8,6 @@ class Header extends React.Component {
                     <a className="site-title" href="/">Wei's Blog</a>
                     <nav className="site-nav">
                         <div className="trigger">
-                            <a className="page-link yue" href="/english">english</a>
-                            <a className="page-link yue" href="/chinese">中文</a>
                             <a className="page-link yue" href="/about">关于</a>
                         </div>
                     </nav>
