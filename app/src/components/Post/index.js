@@ -23,6 +23,10 @@ class Post extends React.Component {
                 });
             })
             .catch(console.log);
+        const script = document.createElement('script');
+        script.src = "https://static.codepen.io/assets/embed/ei.js";
+        script.async = true;
+        document.body.appendChild(script);
     }
 
     render() {
