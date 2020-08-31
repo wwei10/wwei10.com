@@ -37,6 +37,10 @@ class Feed extends React.Component {
                             </li>
                         ))}
                     </ul>
+                    <p class="yue">通过
+                        <a href="https://feedburner.google.com/fb/a/mailverify?uri=wwei10/blog&amp;loc=en_US">邮箱</a>
+                        订阅
+                    </p>
                 </div>
             </div>
         );
