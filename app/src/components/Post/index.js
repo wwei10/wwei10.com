@@ -14,7 +14,7 @@ class Post extends React.Component {
             .then(res => res.json())
             .then((data) => {
                 this.setState({
-                    post: data.posts[0],
+                    post: data.posts[6],
                 });
             })
             .catch(console.log);
@@ -23,23 +23,25 @@ class Post extends React.Component {
     render() {
         if (this.state.post) {
             return (
-                <div class="page-content">
-                    <div class="wrap yue">
-                        <div class="post">
-                            <header class="post-header">
+                <div className="page-content">
+                    <div className="wrap yue">
+                        <div className="post">
+                            <header className="post-header yue">
                                 <h1>{ this.state.post.Title }</h1>
                             </header>
-                            <article class="post-content">
-                                { this.state.post.Content }
+                            <article className="post-content">
+                                <div dangerouslySetInnerHTML={
+                                    {__html: this.state.post.Content}
+                                } className="yue">
+                                </div>
                             </article>
                         </div>
-                        <div id='discourse-comments'></div>
                     </div>
                 </div>
             );
         }
         return (
-            <div class="wrap yue">Loading ... </div>
+            <div className="wrap yue">Loading ... </div>
         )
     }
 }

@@ -40,6 +40,16 @@ func englishTimeline(c *gin.Context) {
 
 func timelineAPI(c *gin.Context) {
 	var posts = parser.GetPagesFromDir("./posts")
+	for i := range posts {
+		posts[i].Content = string(blackfriday.Run(
+			[]byte(posts[i].Content),
+			blackfriday.WithRenderer(
+				// See options here:
+				// https://github.com/alecthomas/chroma/tree/master/styles
+				bfchroma.NewRenderer(bfchroma.Style("dracula")),
+			),
+		))
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"posts": posts,
 	})
@@ -52,6 +62,7 @@ func setupRouter() *gin.Engine {
 	if !gin.IsDebugging() {
 		r.Use(static.Serve("/", static.LocalFile("./app/build", true)))
 	}
+	r.Static("/assets", "./assets")
 
 	r.HTMLRender = createMyRenderer()
 
