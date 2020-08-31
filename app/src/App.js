@@ -10,9 +10,9 @@ function App() {
   return (
     <Router>
       <Header />
+      <Route path="/posts/:permalink" component={Post} />
       <Route path="/about" exact component={About} />
       <Route path="/" exact component={Feed} />
-      <Route path="/posts/:permalink" component={Post} />
     </Router>
   );
 }

@@ -12,7 +12,7 @@ discourse: 13
 ## 习惯的四要素
 
 <img
-  src="/assets/atomic-habits.png"
+  src='/assets/atomic-habits.png'
   alt="Atomic Habits"
   class="responsive"
   width="700"

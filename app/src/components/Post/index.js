@@ -14,7 +14,7 @@ class Post extends React.Component {
             .then(res => res.json())
             .then((data) => {
                 this.setState({
-                    post: data.posts[6],
+                    post: data.posts[4],
                 });
             })
             .catch(console.log);
