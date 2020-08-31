@@ -21,12 +21,26 @@ class Post extends React.Component {
                 this.setState({
                     post: data.post,
                 });
+
+                // Enable codepen.
+                const codepen = document.createElement('script');
+                codepen.src = "https://static.codepen.io/assets/embed/ei.js";
+                codepen.async = true;
+                document.body.appendChild(codepen);
+
+                // Enable discourse.
+                const discourse = document.createElement('script');
+                discourse.innerHTML =  "var DiscourseEmbed = { discourseUrl: 'https://discourse.wwei10.com/',";
+                discourse.innerHTML += "topicId: " + data.post.Discourse + "};";
+                discourse.innerHTML += "(function() {";
+                discourse.innerHTML += "var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true;";
+                discourse.innerHTML += "d.src = DiscourseEmbed.discourseUrl + 'javascripts/embed.js';";
+                discourse.innerHTML += "(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(d);";
+                discourse.innerHTML += "})();";
+                discourse.async = true;
+                document.body.appendChild(discourse);
             })
             .catch(console.log);
-        const script = document.createElement('script');
-        script.src = "https://static.codepen.io/assets/embed/ei.js";
-        script.async = true;
-        document.body.appendChild(script);
     }
 
     render() {
@@ -45,6 +59,7 @@ class Post extends React.Component {
                                 </div>
                             </article>
                         </div>
+                    <div id='discourse-comments'></div>
                     </div>
                 </div>
             );
