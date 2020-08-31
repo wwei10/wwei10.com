@@ -11,7 +11,11 @@ class Post extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://localhost:8080/api/v1/search/' + this.state.permalink)
+        var api = '/api/v1/search/';
+        if (window.location.hostname === 'localhost') {
+            api = 'http://localhost:8080/api/v1/search/';
+        }
+        fetch(api + this.state.permalink)
             .then(res => res.json())
             .then((data) => {
                 this.setState({

@@ -11,7 +11,11 @@ class Feed extends React.Component {
 
 
     componentDidMount() {
-        fetch('http://localhost:8080/api/v1/timeline')
+        var api = '/api/v1/timeline';
+        if (window.location.hostname === 'localhost') {
+            api = 'http://localhost:8080/api/v1/timeline';
+        }
+        fetch(api)
             .then(res => res.json())
             .then((data) => {
                 this.setState({
