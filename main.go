@@ -13,29 +13,6 @@ import (
 	"github.com/wwei10/wwei10.com/parser"
 )
 
-// Renders timeline of the blog.
-func timelineHelper(c *gin.Context, category string) {
-	var posts = parser.GetPagesFromDir("./posts")
-	if category != "Default" {
-		posts = parser.GetPagesWithCategory(posts, category)
-	}
-	c.HTML(http.StatusOK, "index", gin.H{
-		"Posts": posts,
-	})
-}
-
-func timeline(c *gin.Context) {
-	timelineHelper(c, "Default")
-}
-
-func chineseTimeline(c *gin.Context) {
-	timelineHelper(c, "Chinese")
-}
-
-func englishTimeline(c *gin.Context) {
-	timelineHelper(c, "English")
-}
-
 func timelineAPI(c *gin.Context) {
 	var posts = parser.GetPagesFromDir("./posts")
 	for i := range posts {
