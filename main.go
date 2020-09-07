@@ -3,13 +3,17 @@ package main
 import (
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/Depado/bfchroma"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/russross/blackfriday/v2"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 
+	"github.com/wwei10/wwei10.com/ginzap"
 	"github.com/wwei10/wwei10.com/parser"
 )
 
@@ -53,7 +57,25 @@ func searchAPI(c *gin.Context) {
 
 func setupRouter() *gin.Engine {
 	r := gin.Default()
+
 	r.Use(cors.Default())
+	var path = nil
+	if gin.IsDebugging() {
+		path = "wwei10.com.log"
+	} else {
+		path = "/root/wwei10.com.log"
+	}
+	logger, _ := zap.Config{
+		Encoding:    "json",
+		Level:       zap.NewAtomicLevelAt(zapcore.InfoLevel),
+		OutputPaths: []string{"wwei10.com.log"},
+	}.Build()
+
+	// Add a ginzap middleware which:
+	//  - Logs all requests, like a combined access and error log.
+	//  - Logs to stdout.
+	//  - RFC3339 with UTC time format.
+	r.Use(ginzap.Ginzap(logger, time.RFC3339, true))
 
 	// APIs.
 	v1 := r.Group("/api/v1")
