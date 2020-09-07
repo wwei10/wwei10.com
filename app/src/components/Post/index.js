@@ -7,6 +7,8 @@ class Post extends React.Component {
         this.state = {
             permalink: this.props.match.params.permalink,
             post: null,
+            postView: 0,
+            totalView: 0,
         };
     }
 
@@ -20,6 +22,8 @@ class Post extends React.Component {
             .then((data) => {
                 this.setState({
                     post: data.post,
+                    postView: data.postView,
+                    totalView: data.totalView,
                 });
 
                 // Enable codepen.
@@ -59,7 +63,13 @@ class Post extends React.Component {
                                 </div>
                             </article>
                         </div>
-                    <div id='discourse-comments'></div>
+                        <div id='discourse-comments'></div>
+                        <span style={{ display: 'inline', float: 'left' }}>
+                            <small>本页面访问量{ this.state.postView }次</small>
+                        </span>
+                        <span style={{ display: 'inline', float: 'right' }}>
+                            <small>总访问量{ this.state.totalView }次</small>
+                        </span>
                     </div>
                 </div>
             );

@@ -24,6 +24,11 @@ var db, err = sql.Open("sqlite3", "./stats.db")
 
 func timelineAPI(c *gin.Context) {
 	var posts = parser.GetPagesFromDir("./posts")
+
+	// Increment page view counter.
+	counter.UpdateDB(*db, "timeline")
+
+	// Aggregate all posts.
 	for i := range posts {
 		posts[i].Content = string(blackfriday.Run(
 			[]byte(posts[i].Content),
@@ -35,13 +40,19 @@ func timelineAPI(c *gin.Context) {
 		))
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"posts": posts,
+		"posts":     posts,
+		"totalView": counter.GetTotalViews(*db),
 	})
 }
 
 func searchAPI(c *gin.Context) {
 	var posts = parser.GetPagesFromDir("./posts")
 	link := c.Param("link")
+
+	// Increment page view counter.
+	counter.UpdateDB(*db, link)
+
+	// Search for relevant post.
 	for i := range posts {
 		if strings.Contains(posts[i].Permalink, link) {
 			posts[i].Content = string(blackfriday.Run(
@@ -53,20 +64,13 @@ func searchAPI(c *gin.Context) {
 				),
 			))
 			c.JSON(http.StatusOK, gin.H{
-				"post": posts[i],
+				"post":      posts[i],
+				"postView":  counter.GetStats(*db, link),
+				"totalView": counter.GetTotalViews(*db),
 			})
 			return
 		}
 	}
-}
-
-func analyticsAPI(c *gin.Context) {
-	link := c.Param("link")
-	counter.UpdateDB(*db, link)
-	c.JSON(http.StatusOK, gin.H{
-		"page_view":  counter.GetStats(*db, link),
-		"total_view": counter.GetTotalViews(*db),
-	})
 }
 
 func setupRouter() *gin.Engine {
@@ -94,14 +98,16 @@ func setupRouter() *gin.Engine {
 	{
 		v1.GET("/timeline", timelineAPI)
 		v1.GET("/search/:link", searchAPI)
-		v1.GET("/analytics/:link", analyticsAPI)
 	}
 
-	// Serve react.
-	r.Use(static.Serve("/", static.LocalFile("./app/build", false)))
-	r.NoRoute(func(c *gin.Context) {
-		c.File("./app/build/index.html")
-	})
+	// Serve react in release mode.
+	// In debugging mode, use serve -s build to serve reactjs in ./app folder.
+	if !gin.IsDebugging() {
+		r.Use(static.Serve("/", static.LocalFile("./app/build", false)))
+		r.NoRoute(func(c *gin.Context) {
+			c.File("./app/build/index.html")
+		})
+	}
 	return r
 }
 
