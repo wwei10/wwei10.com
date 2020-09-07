@@ -65,6 +65,7 @@ class Post extends React.Component {
                         </div>
                         <div id='discourse-comments'></div>
                     </div>
+                    <br />
                     <div className="wrap yue">
                         <span style={{ display: 'inline', float: 'left' }}>
                             <small>本页面访问量{ this.state.postView }次</small>
