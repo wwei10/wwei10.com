@@ -59,16 +59,14 @@ func setupRouter() *gin.Engine {
 	r := gin.Default()
 
 	r.Use(cors.Default())
-	var path = nil
+	var path = "/root/wwei10.com.log"
 	if gin.IsDebugging() {
 		path = "wwei10.com.log"
-	} else {
-		path = "/root/wwei10.com.log"
 	}
 	logger, _ := zap.Config{
 		Encoding:    "json",
 		Level:       zap.NewAtomicLevelAt(zapcore.InfoLevel),
-		OutputPaths: []string{"wwei10.com.log"},
+		OutputPaths: []string{path},
 	}.Build()
 
 	// Add a ginzap middleware which:
