@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
 	"strings"
 	"time"
@@ -9,13 +10,17 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/russross/blackfriday/v2"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
+	"github.com/wwei10/wwei10.com/counter"
 	"github.com/wwei10/wwei10.com/ginzap"
 	"github.com/wwei10/wwei10.com/parser"
 )
+
+var db, err = sql.Open("sqlite3", "./stats.db")
 
 func timelineAPI(c *gin.Context) {
 	var posts = parser.GetPagesFromDir("./posts")
@@ -55,6 +60,15 @@ func searchAPI(c *gin.Context) {
 	}
 }
 
+func analyticsAPI(c *gin.Context) {
+	link := c.Param("link")
+	counter.UpdateDB(*db, link)
+	c.JSON(http.StatusOK, gin.H{
+		"page_view":  counter.GetStats(*db, link),
+		"total_view": counter.GetTotalViews(*db),
+	})
+}
+
 func setupRouter() *gin.Engine {
 	r := gin.Default()
 
@@ -80,6 +94,7 @@ func setupRouter() *gin.Engine {
 	{
 		v1.GET("/timeline", timelineAPI)
 		v1.GET("/search/:link", searchAPI)
+		v1.GET("/analytics/:link", analyticsAPI)
 	}
 
 	// Serve react.
