@@ -101,7 +101,7 @@ func setupRouter() *gin.Engine {
 	}
 
 	// Serve react in release mode.
-	// In debugging mode, use serve -s build to serve reactjs in ./app folder.
+	// In debugging mode, use npm start.
 	if !gin.IsDebugging() {
 		r.Use(static.Serve("/", static.LocalFile("./app/build", false)))
 		r.NoRoute(func(c *gin.Context) {
