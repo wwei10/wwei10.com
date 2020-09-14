@@ -1,4 +1,3 @@
-import { time } from 'console';
 import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
@@ -6,7 +5,6 @@ import {
   Route,
   useParams
 } from "react-router-dom";
-import { isPropertyAccessOrQualifiedName } from 'typescript';
 import './App.css';
 
 class TimeLeft {
@@ -42,7 +40,7 @@ function Timer(props: TimerProps) {
   } else {
     endTimeParameter = +props.endTime;
   }
-  const [endTime, setEndTime] = useState(endTimeParameter);
+  const [endTime] = useState(endTimeParameter);
   const [timeLeft, setTimeLeft] = useState(new TimeLeft(endTime - +new Date() / 1000));
 
   useEffect(() => {
