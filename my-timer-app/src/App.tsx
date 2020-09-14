@@ -17,7 +17,7 @@ class TimeLeft {
 
 function calculateTimeLeft(): TimeLeft {
   let year: number = new Date().getFullYear();
-  let difference = (+new Date(`10/01/${year}`) - +new Date()) / 1000;
+  let difference = (+new Date(`9/14/${year}`) - +new Date()) / 1000;
   return new TimeLeft(difference);
 }
 
@@ -33,28 +33,15 @@ function App() {
     return () => clearTimeout(timer);
   });
 
+  var time = ("0" + timeLeft.hours).slice(-2);
+  time += ":";
+  time += ("0" + timeLeft.minutes).slice(-2);
+  time += ":";
+  time += ("0" + timeLeft.seconds).slice(-2);
 
   return (
     <div>
-      <h1>COUNTDOWN</h1>
-      <div className="countdown-container">
-        <div className="countdown-el days-c">
-            <p className="big-text">{ timeLeft.days }</p>
-            <span>days</span>
-        </div>
-        <div className="countdown-el hours-c">
-            <p className="big-text">{ timeLeft.hours }</p>
-            <span>hours</span>
-        </div>
-        <div className="countdown-el mins-c">
-            <p className="big-text">{ timeLeft.minutes }</p>
-            <span>mins</span>
-        </div>
-        <div className="countdown-el seconds-c">
-            <p className="big-text">{ timeLeft.seconds }</p>
-            <span>seconds</span>
-        </div>
-      </div>
+      <div className="countdown">{ time }</div>
     </div>
   );
 }
