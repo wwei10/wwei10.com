@@ -1,4 +1,12 @@
+import { time } from 'console';
 import React, { useEffect, useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useParams
+} from "react-router-dom";
+import { isPropertyAccessOrQualifiedName } from 'typescript';
 import './App.css';
 
 class TimeLeft {
@@ -6,8 +14,14 @@ class TimeLeft {
   hours: number;
   minutes: number;
   seconds: number;
+  expired: boolean;
 
   constructor(difference: number) {
+    if (difference > 0) {
+      this.expired = false;
+    } else {
+      this.expired = true;
+    }
     this.days = Math.floor(difference / (60 * 60 * 24));
     this.hours = Math.floor(difference / (60 * 60) % 24);
     this.minutes = Math.floor((difference / 60) % 60);
@@ -15,34 +29,75 @@ class TimeLeft {
   }
 }
 
-function calculateTimeLeft(): TimeLeft {
-  let year: number = new Date().getFullYear();
-  let difference = (+new Date(`9/14/${year}`) - +new Date()) / 1000;
-  return new TimeLeft(difference);
+interface ParamTypes {
+  endtime?: string
 }
 
-function App() {
+type TimerProps = { endTime?: number };
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+function Timer(props: TimerProps) {
+  let endTimeParameter: number;
+  if (props.endTime === undefined) {
+    endTimeParameter = +new Date() / 1000 + 30 * 60;
+  } else {
+    endTimeParameter = +props.endTime;
+  }
+  const [endTime, setEndTime] = useState(endTimeParameter);
+  const [timeLeft, setTimeLeft] = useState(new TimeLeft(endTime - +new Date() / 1000));
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setTimeLeft(calculateTimeLeft());
+      let difference: number = endTime - +new Date() / 1000;
+      setTimeLeft(new TimeLeft(difference));
     }, 1000);
     // Clear timeout if the component is unmounted.
     return () => clearTimeout(timer);
   });
 
-  var time = ("0" + timeLeft.hours).slice(-2);
-  time += ":";
-  time += ("0" + timeLeft.minutes).slice(-2);
-  time += ":";
-  time += ("0" + timeLeft.seconds).slice(-2);
+  var timeLeftString = "";
+  if (timeLeft.expired) {
+    timeLeftString = "Expired";
+  } else {
+    if (timeLeft.days > 0) {
+      timeLeftString += ("0" + timeLeft.days).slice(-2);
+      timeLeftString += ":";
+    }
+    if (timeLeft.hours > 0) {
+      timeLeftString += ("0" + timeLeft.hours).slice(-2);
+      timeLeftString += ":";
+    }
+    timeLeftString += ("0" + timeLeft.minutes).slice(-2);
+    timeLeftString += ":";
+    timeLeftString += ("0" + timeLeft.seconds).slice(-2);
+  }
 
   return (
-    <div>
-      <div className="countdown">{ time }</div>
-    </div>
+      <div>
+        <div className="countdown">{ timeLeftString }</div>
+      </div>
+  )
+}
+
+function Child() {
+  let { endtime } = useParams<ParamTypes>();
+  if (endtime === undefined) {
+    return (
+      <Timer />
+    )
+  }
+  return (
+    <Timer endTime={ +endtime } />
+  )
+}
+
+function App() {
+  return (
+    <Router>
+      <Switch>
+        <Route exact path="/" children={<Timer />} />
+        <Route path="/:endtime" children={<Child />} />
+      </Switch>
+    </Router>
   );
 }
 
